@@ -12,7 +12,7 @@ const App: React.FC = () => {
   const [detectorType, setDetectorType] = useState<"tiny" | "ssd">("ssd");
   const [showDebug, setShowDebug] = useState(false);
 
-  const orangeImgPath = "/orange.jpg";
+  const orangeImgPath = "/orange.png";
 
   const startCamera = async () => {
     if (!isModelLoaded) {
