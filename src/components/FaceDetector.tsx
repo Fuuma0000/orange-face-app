@@ -24,11 +24,50 @@ const FaceDetector: React.FC<FaceDetectorProps> = ({
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  // Canvas 全画面切替用の関数
+  const toggleCanvasFullScreen = () => {
+    const canvasElem = canvasRef.current;
+    if (!canvasElem) return;
+    // すでにこのキャンバスが全画面になっているか確認
+    if (document.fullscreenElement !== canvasElem) {
+      canvasElem
+        .requestFullscreen()
+        .then(() => {
+          setDebugInfo("キャンバスを全画面モードに切り替えました");
+        })
+        .catch((err) => {
+          console.error("キャンバスの全画面切替に失敗しました:", err);
+          setDebugInfo(`全画面切替エラー: ${err}`);
+        });
+    } else {
+      document.exitFullscreen().then(() => {
+        setDebugInfo("全画面モードを解除しました");
+      });
+    }
+  };
+
   useEffect(() => {
     if (videoRef.current && stream) {
       videoRef.current.srcObject = stream;
     }
   }, [stream]);
+
+  // 余白追加の処理
+  const addPaddingToPoints = (
+    points: { x: number; y: number }[],
+    paddingFactor: number
+  ) => {
+    const center = points.reduce(
+      (acc, pt) => ({ x: acc.x + pt.x, y: acc.y + pt.y }),
+      { x: 0, y: 0 }
+    );
+    center.x /= points.length;
+    center.y /= points.length;
+    return points.map((pt) => ({
+      x: center.x + (pt.x - center.x) * paddingFactor,
+      y: center.y + (pt.y - center.y) * paddingFactor,
+    }));
+  };
 
   useEffect(() => {
     if (!videoRef.current || !canvasRef.current || !isCameraActive) return;
@@ -45,25 +84,6 @@ const FaceDetector: React.FC<FaceDetectorProps> = ({
       setDebugInfo(`オレンジ画像の読み込みに失敗しました: ${e}`);
     };
 
-    // 目の輪郭に余白を追加するための関数
-    const addPaddingToPoints = (
-      points: { x: number; y: number }[],
-      paddingFactor: number
-    ) => {
-      // 各点の重心を算出
-      const center = points.reduce(
-        (acc, pt) => ({ x: acc.x + pt.x, y: acc.y + pt.y }),
-        { x: 0, y: 0 }
-      );
-      center.x /= points.length;
-      center.y /= points.length;
-      // 重心から各点を指定倍率で外側に移動
-      return points.map((pt) => ({
-        x: center.x + (pt.x - center.x) * paddingFactor,
-        y: center.y + (pt.y - center.y) * paddingFactor,
-      }));
-    };
-
     const detectFace = async () => {
       if (video.readyState === 4) {
         if (
@@ -75,12 +95,16 @@ const FaceDetector: React.FC<FaceDetectorProps> = ({
           setDebugInfo(
             `キャンバスサイズを設定: ${canvas.width}x${canvas.height}`
           );
+          if (videoInfoCallback) {
+            videoInfoCallback(
+              `解像度: ${video.videoWidth}x${video.videoHeight}`
+            );
+          }
         }
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-
         if (showDebug) {
           ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
         } else {
@@ -193,9 +217,8 @@ const FaceDetector: React.FC<FaceDetectorProps> = ({
                   ...leftEye.slice(startPointIndexLeft),
                   ...leftEye.slice(0, startPointIndexLeft),
                 ];
-                // 余白を追加（重心から外側に 1.2 倍）
+                // 余白を追加（重心から外側に 1.8 倍）
                 const paddedLeftEye = addPaddingToPoints(reorderedLeftEye, 1.8);
-
                 ctx.save();
                 ctx.beginPath();
                 ctx.moveTo(paddedLeftEye[0].x, paddedLeftEye[0].y);
@@ -232,7 +255,6 @@ const FaceDetector: React.FC<FaceDetectorProps> = ({
                   reorderedRightEye,
                   1.8
                 );
-
                 ctx.save();
                 ctx.beginPath();
                 ctx.moveTo(paddedRightEye[0].x, paddedRightEye[0].y);
@@ -251,7 +273,7 @@ const FaceDetector: React.FC<FaceDetectorProps> = ({
                 ctx.restore();
               }
 
-              // 口の輪郭描画（省略または元の処理をそのまま）
+              // 口の輪郭描画（そのまま）
               {
                 ctx.save();
                 ctx.beginPath();
@@ -347,6 +369,17 @@ const FaceDetector: React.FC<FaceDetectorProps> = ({
           className="w-full rounded-lg shadow-lg"
           style={{ backgroundColor: "black" }}
         />
+      </div>
+      {/* キャンバス部分だけを全画面にするボタン */}
+      <div className="mt-2">
+        <button
+          onClick={toggleCanvasFullScreen}
+          className="px-4 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white"
+        >
+          {document.fullscreenElement === canvasRef.current
+            ? "全画面解除"
+            : "キャンバス全画面"}
+        </button>
       </div>
     </div>
   );
