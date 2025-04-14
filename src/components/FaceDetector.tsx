@@ -233,7 +233,9 @@ const FaceDetector: React.FC<FaceDetectorProps> = ({
                 }
                 ctx.closePath();
                 ctx.clip();
+                ctx.globalAlpha = 0.7;
                 ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+                ctx.globalAlpha = 0.7;
                 ctx.restore();
               }
 
@@ -269,7 +271,9 @@ const FaceDetector: React.FC<FaceDetectorProps> = ({
                 }
                 ctx.closePath();
                 ctx.clip();
+                ctx.globalAlpha = 0.7;
                 ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+                ctx.globalAlpha = 0.7;
                 ctx.restore();
               }
 
@@ -289,7 +293,9 @@ const FaceDetector: React.FC<FaceDetectorProps> = ({
                 }
                 ctx.closePath();
                 ctx.clip();
+                ctx.globalAlpha = 0.7;
                 ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+                ctx.globalAlpha = 0.7;
                 ctx.restore();
               }
             } else {
