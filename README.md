@@ -1,54 +1,60 @@
-# React + TypeScript + Vite
+# Orange Face
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+オレンジ顔アプリはブラウザで動作するユニークな顔認識アプリケーションです。顔を検出して、ユーザーの顔をオレンジで置き換えながら、目と口の部分だけをそのまま残します。すべての処理はブラウザ上で行われ、サーバーに画像が送信されることはありません。
 
-Currently, two official plugins are available:
+## 特徴
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 顔認識と顔のランドマーク（目・口など）の検出
+- 検出した顔をオレンジに置き換え、目と口は元の映像を維持
+- 2 種類の顔検出モード
 
-## Expanding the ESLint configuration
+  - TinyFaceDetector: 軽量・高速モード
+  - SSD MobileNet: 精度重視モード
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- デバッグモードによる詳細情報の表示
+- カメラ画像の保存機能
+- プライバシー保護: すべての処理はローカルで実行されます
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## 技術スタック
+
+- React + TypeScript
+- Vite
+- TailwindCSS
+- face-api.js (@vladmandic/face-api)
+
+## 使い方
+
+1. ページを開くと、顔認識モデルが自動的に読み込まれます。
+2. 「カメラを起動」ボタンをクリックしてカメラへのアクセスを許可します。
+3. 画面に顔を映すと、顔が検出され、オレンジに置き換えられます。
+4. 検出方法の切り替えや、デバッグモードの切り替えができます。
+5. 「画像を保存」ボタンをクリックすると、現在の画像を保存できます。
+
+## インストール方法
+
+```bash
+# リポジトリをクローン
+git clone https://github.com/your-username/orange-face-app.git
+cd orange-face-app
+
+# 依存関係をインストール
+
+npm install
+
+# 開発サーバーを起動
+
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## ビルド方法
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+```bash
+npm run build
 ```
+
+ビルドされたファイルは dist ディレクトリに出力されます。
+
+## プライバシーについて
+
+このアプリケーションは、ユーザーのプライバシーを重視して設計されています。  
+カメラのキャプチャや顔認識の処理はすべてユーザーのブラウザ内で行われ、画像データがサーバーに送信されることはありません。
