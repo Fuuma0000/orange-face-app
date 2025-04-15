@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Controls from "./components/Controls";
 import FaceDetector from "./components/FaceDetector";
 import { useFaceApiModels } from "./hooks/useFaceApiModels";
+import "./app.css";
 
 const App: React.FC = () => {
   const { isModelLoaded, error, debugInfo, setDebugInfo } = useFaceApiModels();
@@ -84,7 +85,9 @@ const App: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-gray-100 py-8 px-4">
-      <h1 className="text-3xl font-bold text-orange-500 mb-6">Orange Face</h1>
+      <h1 className="text-3xl font-bold bg-linear-to-r/oklab from-my-orange to-my-yellow mb-6 inline-block text-transparent bg-clip-text">
+        Orange Face
+      </h1>
 
       {error && (
         <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded">

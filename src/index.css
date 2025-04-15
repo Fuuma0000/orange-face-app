@@ -1,1 +1,6 @@
 @import "tailwindcss";
+
+@theme {
+  --color-my-orange: oklch(72% 0.5 90);
+  --color-my-yellow: oklch(95% 0.5 110);
+}
