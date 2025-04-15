@@ -85,7 +85,7 @@ const App: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-gray-100 py-8 px-4">
-      <h1 className="text-3xl font-bold bg-linear-to-r/oklab from-my-orange to-my-yellow mb-6 inline-block text-transparent bg-clip-text">
+      <h1 className="text-4xl font-bold bg-linear-to-r/oklab from-my-orange to-my-yellow mb-6 inline-block text-transparent bg-clip-text">
         Orange Face
       </h1>
 
