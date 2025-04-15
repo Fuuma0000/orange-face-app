@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import Controls from "./components/Controls";
 import FaceDetector from "./components/FaceDetector";
 import { useFaceApiModels } from "./hooks/useFaceApiModels";
-import "./app.css";
 
 const App: React.FC = () => {
   const { isModelLoaded, error, debugInfo, setDebugInfo } = useFaceApiModels();
